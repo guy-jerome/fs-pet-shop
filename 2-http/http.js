@@ -13,27 +13,20 @@ const port = process.env.PORT || 9001
 
 const petRegExp = /^\/pets\/(.*)$/;
 
-
-
 const server = http.createServer((req,res)=>{
 
 
   if(req.method === "GET" && req.url === "/pets") {
       fs.readFile(petsPath, "utf8", function(err, petsJSON ) {
           if(err) {
-              console.error(err.stack);
-              res.statusCode = 500;
-              res.setHeader("Content-Type", "text/plain");
-              return res.end("Internal Server Error");
+            send500(err,res)
           }
           res.setHeader("Content-Type", "application/json");
           res.end(petsJSON)
       })
   }
   else if(req.method === "POST" && req.url === "/pets"){
-
     let body = '';
-
     req.on('data', (chunk) => {
       body += chunk;
     })
@@ -42,27 +35,19 @@ const server = http.createServer((req,res)=>{
       try{
         data = JSON.parse(body)
       }catch{
-        res.statusCode = 400;
-        res.setHeader("Content-Type", "text/plain");
-        return res.end("BAD REQUEST can't parse");
+        send400(res)
       }
 
       if (data["name"] && parseInt(data["age"]) && data["kind"]){
         fs.readFile(petsPath, "utf8", function(err, petsJSON ) {
           if(err){
-              console.error(err.stack);
-              res.statusCode = 500;
-              res.setHeader("Content-Type", "text/plain");
-              return res.end("Internal Server Error");
+            send500(err,res)
           }else{
             const petData = JSON.parse(petsJSON)
             petData.push(data)
             fs.writeFile(petsPath, JSON.stringify(petData), function(err){
               if(err){
-                console.error(err.stack);
-                res.statusCode = 500;
-                res.setHeader("Content-Type", "text/plain");
-                return res.end("Internal Server Error");
+                send500(err)
               }else{
                 res.setHeader("Content-Type", "application/json");
                 res.end(JSON.stringify(data))
@@ -71,9 +56,7 @@ const server = http.createServer((req,res)=>{
           }
         })
       }else{
-        res.statusCode = 400;
-        res.setHeader("Content-Type", "text/plain");
-        return res.end("BAD REQUEST");
+        send400(res)
       }
     })
   }
@@ -82,28 +65,20 @@ const server = http.createServer((req,res)=>{
       const fullUrl = `http://${req.headers.host}${req.url}`;
       const url = new URL(fullUrl);
       const index = parseInt(url.pathname.split('/')[2])
-
       fs.readFile(petsPath, "utf8",  function(err, petsJSON) {
           const pets = JSON.parse(petsJSON)
           if(err) {
-            console.error(err.stack);
-            res.statusCode = 500;
-            res.setHeader("Content-Type", "text/plain");
-            return res.end("Internal Server Error");
+            send500(err,res)
           }
           else if(pets[index]){
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify(pets[index]))
           }else{
-            res.statusCode = 404;
-            res.setHeader("Content-Type", "text/plain");
-            return res.end("NOT FOUND");
+            send404(res)
           }
       })
   }else{
-    res.statusCode = 404;
-    res.setHeader("Content-Type", "text/plain");
-    return res.end("NOT FOUND");
+    send404(res)
   }
 
 })
@@ -111,4 +86,24 @@ const server = http.createServer((req,res)=>{
 server.listen(port, ()=>{
   console.log(`Server listening on localhost:${port}.`)
 })
+
+
+function send404(res){
+  res.statusCode = 404;
+  res.setHeader("Content-Type", "text/plain");
+  return res.end("NOT FOUND");
+}
+
+function send400(res){
+  res.statusCode = 400;
+  res.setHeader("Content-Type", "text/plain");
+  return res.end("BAD REQUEST");
+}
+
+function send500(err,res){
+  console.error(err.stack);
+  res.statusCode = 500;
+  res.setHeader("Content-Type", "text/plain");
+  return res.end("Internal Server Error");
+}
 
