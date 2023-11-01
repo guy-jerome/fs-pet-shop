@@ -16,16 +16,16 @@ args.shift()
 args.shift()
 switch (main_command){
   case "read":
-    read();
+    read(args);
     break;
   case 'create':
-    create();
+    create(args);
     break;
   case 'update':
-    update();
+    update(args);
     break;
   case 'destroy':
-    destroy();
+    destroy(args);
     break;
   default:
     console.error("Usage: node fs.js [read | create | update | destroy]")
@@ -33,7 +33,7 @@ switch (main_command){
 }
 
 
-function read(){
+function read(args){
   fs.readFile('../pets.json','utf8',function(error, data){
     if(error){
         console.log(error)
@@ -51,7 +51,7 @@ function read(){
   })
 }
 
-function create(){
+function create(args){
   fs.readFile('../pets.json','utf8',function(error, data){
     if(error){
         console.log(error)
@@ -79,7 +79,7 @@ function create(){
   })
 }
 
-function update(){
+function update(args){
   fs.readFile('../pets.json','utf8',function(error, data){
     if(error){
         console.log(error)
@@ -109,7 +109,7 @@ function update(){
 
 }
 
-function destroy(){
+function destroy(args){
     fs.readFile('../pets.json','utf8',function(error, data){
         if(error){
             console.log(error)
