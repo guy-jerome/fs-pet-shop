@@ -21,7 +21,7 @@ Your next task is to create a RESTful Express HTTP server called `rest.js` to ha
 | Request Method | Request URL | Request Body                                            | Response Status | Response Content-Type | Response Body                                           |
 | -------------- | ----------- | ------------------------------------------------------- | --------------- | --------------------- | ------------------------------------------------------- |
 | `POST`         | `/pets`     | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
-| `GET`          | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
+| `GET`          | `/pets`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
 | `PATCH`        | `/pets/3`   | `{ "name": "Fido" }`                                    | `200`           | `application/json`    | `{ "name": "Fido", "age": 3, "kind": "parakeet" }`      |
 | `GET`          | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Fido", "age": 3, "kind": "parakeet" }`      |
 | `DELETE`       | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Fido", "age": 3, "kind": "parakeet" }`      |
