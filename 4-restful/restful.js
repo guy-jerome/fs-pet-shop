@@ -1,9 +1,18 @@
 import express from "express"
 import pg from "pg"
 import dotenv from "dotenv"
+import basicAuth from "express-basic-auth"
+
+
 
 const port = process.env.port || 3000;
 const app = express();
+
+const basicAuthMiddleware = basicAuth({
+  users: {'admin': 'meowmix'},
+  challenge: true,
+  unauthorizedResponse: 'Unauthorized'
+})
 
 function verifyBody(req,res,next){
   const {age, kind, name} = req.body
@@ -24,6 +33,7 @@ const pool = new pg.Pool({
   port: 5432
 })
 
+app.use(basicAuthMiddleware);
 app.use(express.static('public'))
 app.use(express.json())
 //GET ALL 
